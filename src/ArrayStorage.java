@@ -28,29 +28,20 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int k = -1;
         for (int i = 0; i < size; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                k = i;
+            if (storage[i].uuid.equals(uuid)) {
+                storage[i] = storage[size - 1];
+                storage[--size] = null;
                 break;
             }
         }
-        if (k >= 0) {
-            for (int j = k; j < size - 1; j++) {
-                storage[j] = storage[j + 1];
-            }
-            storage[size - 1] = null;
-            size--;
-        } else System.out.println("Неверный uuid.");
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] resumes = new Resume[size];
-        System.arraycopy(storage, 0, resumes, 0, size);
-        return resumes;
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
