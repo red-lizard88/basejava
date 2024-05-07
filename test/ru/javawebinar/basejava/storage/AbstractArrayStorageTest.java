@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class AbstractArrayStorageTest {
-    private Storage storage = new ArrayStorage();
+public abstract class AbstractArrayStorageTest {
+    private Storage storage;
 
     public static final String UUID_1 = "uuid1";
     public static final String UUID_2 = "uuid2";
