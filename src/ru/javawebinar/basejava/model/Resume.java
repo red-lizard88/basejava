@@ -13,6 +13,10 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
 
+    public String getFullName() {
+        return fullName;
+    }
+
     private final String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
