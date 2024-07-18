@@ -1,23 +1,48 @@
 package ru.javawebinar.basejava;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import ru.javawebinar.basejava.storage.SqlStorage;
+import ru.javawebinar.basejava.storage.Storage;
+
+import java.io.*;
 import java.util.Properties;
 
+
 public class Config {
+    private static final File PROPS = new File(getHomeDir(), "config\\resumes.properties");
     private static final Config INSTANCE = new Config();
-    public static Config get(){return INSTANCE;}
 
-    private Properties props = new Properties();
-    private Config(){
-        try(InputStream is = new FileInputStream("./config/resumes.properties")){
+    private final File storageDir;
+    private final Storage storage;
+
+    public static Config get() {
+        return INSTANCE;
+    }
+
+    private Config() {
+        try (InputStream is = new FileInputStream(PROPS)) {
+            Properties props = new Properties();
             props.load(is);
-            props.getProperty("");
+            storageDir = new File(props.getProperty("storage.dir"));
+            storage = new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
         } catch (IOException e) {
-           throw  new IllegalStateException("Invalid config  file");
+            throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
+    }
 
+    public File getStorageDir() {
+        return storageDir;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
+
+    private static File getHomeDir() {
+        String prop = System.getProperty("homeDir");
+        File homeDir = new File(prop == null ? "." : prop);
+        if (!homeDir.isDirectory()) {
+            throw new IllegalStateException(homeDir + " is not directory");
+        }
+        return homeDir;
     }
 }
